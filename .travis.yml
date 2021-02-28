@@ -1,0 +1,15 @@
+dist: focal
+language: cpp
+addons:
+  apt:
+    packages:
+      - build-essential
+
+script:
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
+  - cd ..
+  - echo "C++ tests"
+  - find build/ -name "*_gtest" -exec {} \;
