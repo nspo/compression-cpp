@@ -2,6 +2,7 @@
 
 ## `include/`
 - `huffman::compress` and `huffman::expand`  to apply [Huffman-style](https://en.wikipedia.org/wiki/Huffman_coding) lossless compression to data streams
+- `lzw::compress` and `lzw::expand` to apply [Lempel–Ziv–Welch (LZW)](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch) lossless compression to data streams
 - `BitStreamIn` as a wrapper to easily read a bit stream from `std::istream`
 - `BitStreamOut` as a wrapper to easily write a bit stream to `std::ostream`
 - `ShortBitSet` as a simple bit set with up to 32 bits (stored in a `uint32_t`) and some convenience functions

@@ -5,6 +5,7 @@ add_executable(${BINARY}
                 test_shortbitset.cpp
                 test_bitstreamout.cpp
                 test_bitstreamin.cpp
+                test_lzw.cpp
 )
 
 add_test(NAME ${BINARY} COMMAND ${BINARY})
