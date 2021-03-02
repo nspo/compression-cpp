@@ -4,6 +4,7 @@
 #include <memory>
 #include <queue>
 #include <functional>
+#include <sstream>
 #include <iostream>
 #include "PriorityQueueExtended.h" // priority_queue which works with unique_ptr
 #include "ShortBitSet.h"
@@ -101,7 +102,7 @@ namespace huffman {
 
         void trie2table(const huffman::Node &node, ShortBitSet &stack, TrieTable &result) {
             if (node.isLeaf()) {
-                result[node.ch()] = stack;
+                result[static_cast<uint8_t>(node.ch())] = stack; // do not use char as it's signed!
             } else {
                 if (node.left()) {
                     stack.push_back(false);
@@ -208,9 +209,9 @@ namespace huffman {
     // @param readBytes optionally return the number of bytes read from input stream
     NodePtr buildTrie(std::istream &is, std::optional<std::reference_wrapper<uint32_t>> readBytes = {}) {
         std::array<int, R> freq{};
-        char c;
+        uint8_t c;
         uint32_t numReadBytes = 0;
-        while (is.read(&c, 1)) {
+        while (is.read(reinterpret_cast<char*>(&c), 1)) {
             ++freq[c];
             ++numReadBytes;
         }
@@ -255,8 +256,8 @@ namespace huffman {
             const TrieTable table = internal::trie2table(trieRoot);
 
             for (size_t i = 0; i < inputSize; ++i) {
-                char c;
-                if (!input.read(&c, 1)) {
+                uint8_t c;
+                if (!input.read(reinterpret_cast<char*>(&c), 1)) {
                     throw std::runtime_error("Input ended unexpectedly");
                 }
                 if (table[c].empty()) {

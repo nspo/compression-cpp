@@ -12,6 +12,7 @@ namespace lzw {
     constexpr static int L = 4096; // number of codewords, 2^12
     constexpr static int W = 12; // length in bit of codewords
 
+    [[maybe_unused]]
     static void compress(std::istream &is, std::ostream &os) {
         // read complete input into string
         const std::string stringInput(std::istreambuf_iterator<char>(is), {});
@@ -41,6 +42,7 @@ namespace lzw {
         bso.flush();
     }
 
+    [[maybe_unused]]
     static void expand(std::istream &is, std::ostream &os) {
         BitStreamIn bsi(is);
 
