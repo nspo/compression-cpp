@@ -11,5 +11,6 @@ script:
   - cmake ..
   - make
   - cd ..
+  - test/test_compress.sh build/compress README.md
   - echo "C++ tests"
   - find build/ -name "*_gtest" -exec {} \;

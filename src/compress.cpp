@@ -7,9 +7,9 @@
 int main(int argc, char** argv) {
     // Parse arguments
     argagg::parser argparser {{
-                                      {"help", {"-h", "--help"}, "Show this help message", 0},
-                                      {"lzw", {"-l", "--lzw"}, "Use LZW compression instead of Huffman", 0},
-                                      {"extract", {"-x", "--extract"}, "Extract input file instead of compressing it", 0},
+                              {"help", {"-h", "--help"}, "Show this help message", 0},
+                              {"lzw", {"-l", "--lzw"}, "Use LZW compression instead of Huffman", 0},
+                              {"extract", {"-x", "--extract"}, "Extract input file instead of compressing it", 0},
                               }};
     argagg::parser_results args;
     try {
