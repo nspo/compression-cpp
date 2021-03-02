@@ -1,5 +1,23 @@
 # Compression algorithms in C++
 
+## `src/`
+- `compress` executable that can compress and extract arbitrary files with Huffman or LZW compression:
+   - ```bash
+      $ build/compress -h
+      Usage: build/compress [options] INPUT_FILENAME
+      -h, --help
+      Show this help message
+      -l, --lzw
+      Use LZW compression instead of Huffman
+      -x, --extract
+      Extract input file instead of compressing it
+      
+      Examples:
+      build/compress input.txt		Compress input.txt with Huffman
+      build/compress -l input.txt		Compress input.txt with LZW
+      build/compress -xl input.txt.lzw	Extract input.txt.lzw with LZW
+     ```
+
 ## `include/`
 - `huffman::compress` and `huffman::expand`  to apply [Huffman-style](https://en.wikipedia.org/wiki/Huffman_coding) lossless compression to data streams
 - `lzw::compress` and `lzw::expand` to apply [Lempel–Ziv–Welch (LZW)](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch) lossless compression to data streams
