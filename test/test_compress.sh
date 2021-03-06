@@ -16,3 +16,7 @@ cmp $FILE $FILE".huffman.orig"
 $EXECUTABLE -l $FILE
 $EXECUTABLE -xl $FILE".lzw"
 cmp $FILE $FILE".lzw.orig"
+# test bw + mtf + huffman
+$EXECUTABLE -b $FILE
+$EXECUTABLE -xb $FILE".bwmh"
+cmp $FILE $FILE".bwmh.orig"

@@ -6,6 +6,9 @@ add_executable(${BINARY}
                 test_bitstreamout.cpp
                 test_bitstreamin.cpp
                 test_lzw.cpp
+                test_mtf.cpp
+                test_cs.cpp
+                test_bw.cpp
 )
 
 add_test(NAME ${BINARY} COMMAND ${BINARY})

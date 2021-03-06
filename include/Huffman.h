@@ -50,11 +50,13 @@ namespace huffman {
     };
 
     // Comparison operator (to be able to use NodePtr in priority queue)
+    [[maybe_unused]]
     bool operator>(const NodePtr &lhs, const NodePtr &rhs) {
         return lhs->freq() > rhs->freq();
     }
 
     // check (sub-)tries for equality (used in unit tests)
+    [[maybe_unused]]
     bool operator==(const Node &lhs, const Node &rhs) {
         if (&lhs == &rhs) return true;
         if (lhs.isLeaf() != rhs.isLeaf()) return false;
@@ -72,7 +74,8 @@ namespace huffman {
 
     namespace internal {
         // Build a trie using the number of occurrences of each character
-        NodePtr buildTrie(const std::array<int, R> &frequencies) {
+        [[maybe_unused]]
+        static NodePtr buildTrie(const std::array<int, R> &frequencies) {
             priority_queue<NodePtr, std::vector<NodePtr>, std::greater<>> minPQ;
 
             // Create nodes for all characters
@@ -100,7 +103,8 @@ namespace huffman {
             return minPQ.pop_top(); // return root
         }
 
-        void trie2table(const huffman::Node &node, ShortBitSet &stack, TrieTable &result) {
+        [[maybe_unused]]
+        static void trie2table(const huffman::Node &node, ShortBitSet &stack, TrieTable &result) {
             if (node.isLeaf()) {
                 result[static_cast<uint8_t>(node.ch())] = stack; // do not use char as it's signed!
             } else {
@@ -119,15 +123,16 @@ namespace huffman {
 
 
         // Generate table of (encoded) values for each character that occurs, empty strings for non-occurring characters
-        TrieTable trie2table(const huffman::Node &node) {
+        [[maybe_unused]]
+        static TrieTable trie2table(const huffman::Node &node) {
             TrieTable table{};
             ShortBitSet stack;
             internal::trie2table(node, stack, table);
             return table;
         }
 
-
-        void printTrie(const huffman::Node &node, ShortBitSet &stack) {
+        [[maybe_unused]]
+        static void printTrie(const huffman::Node &node, ShortBitSet &stack) {
             if (node.isLeaf()) {
                 for (size_t i = 0; i < stack.size(); ++i) {
                     std::cout << stack.at(i);
@@ -159,15 +164,16 @@ namespace huffman {
             }
         }
 
-
-        void printTrie(const huffman::Node &node) {
+        [[maybe_unused]]
+        static void printTrie(const huffman::Node &node) {
             ShortBitSet stack;
             internal::printTrie(node, stack);
         }
 
 
         // convert bit input stream to trie
-        NodePtr readTrie(BitStreamIn &bsi) {
+        [[maybe_unused]]
+        static NodePtr readTrie(BitStreamIn &bsi) {
             if (bsi.readBool()) {
                 // a leaf follows
                 char c = bsi.readInteger<char>(8);
@@ -179,7 +185,8 @@ namespace huffman {
         }
 
         // write trie to output bit stream
-        void writeTrie(BitStreamOut &bso, const Node &node) {
+        [[maybe_unused]]
+        static void writeTrie(BitStreamOut &bso, const Node &node) {
             if (node.isLeaf()) {
                 bso.write(true);
                 bso.writeInteger(node.ch());
@@ -191,7 +198,8 @@ namespace huffman {
             writeTrie(bso, *node.right());
         }
 
-        void printTable(const TrieTable &table) {
+        [[maybe_unused]]
+        static void printTable(const TrieTable &table) {
             for (size_t i = 0; i < R; ++i) {
                 if (!table[i].empty()) {
                     std::cout << static_cast<char>(i) << ": ";
@@ -207,7 +215,8 @@ namespace huffman {
 
     // build a trie for the data in input stream
     // @param readBytes optionally return the number of bytes read from input stream
-    NodePtr buildTrie(std::istream &is, std::optional<std::reference_wrapper<uint32_t>> readBytes = {}) {
+    [[maybe_unused]]
+    static NodePtr buildTrie(std::istream &is, std::optional<std::reference_wrapper<uint32_t>> readBytes = {}) {
         std::array<int, R> freq{};
         uint8_t c;
         uint32_t numReadBytes = 0;
@@ -222,7 +231,8 @@ namespace huffman {
     }
 
     // build a trie for the data in string_view
-    NodePtr buildTrie(std::string_view sv) {
+    [[maybe_unused]]
+    static NodePtr buildTrie(std::string_view sv) {
         std::array<int, R> freq{};
         for(char c : sv) {
             ++freq[c];
@@ -232,7 +242,8 @@ namespace huffman {
 
     namespace internal {
         // decompress input bit stream to output bit stream
-        void expand(BitStreamIn &input, BitStreamOut &output) {
+        [[maybe_unused]]
+        static void expand(BitStreamIn &input, BitStreamOut &output) {
             const NodePtr root = internal::readTrie(input);
 
             const auto N = input.readInteger<uint32_t>();
@@ -250,7 +261,8 @@ namespace huffman {
         }
 
         // compress inputSize bytes of input into output using an already generated trie
-        void compress(std::istream &input, const uint32_t inputSize, BitStreamOut &output, const Node &trieRoot) {
+        [[maybe_unused]]
+        static void compress(std::istream &input, const uint32_t inputSize, BitStreamOut &output, const Node &trieRoot) {
             internal::writeTrie(output, trieRoot);
             output.writeInteger(inputSize);
             const TrieTable table = internal::trie2table(trieRoot);
@@ -269,7 +281,8 @@ namespace huffman {
         }
 
         // compress the input, given as two independent streams to the same data, into output
-        void compress(std::istream &input1, std::istream &input2, BitStreamOut &output) {
+        [[maybe_unused]]
+        static void compress(std::istream &input1, std::istream &input2, BitStreamOut &output) {
             if (&input1 == &input2) throw std::runtime_error("input1 and input2 may not be the same object");
 
             uint32_t inputSize = 0;
@@ -281,14 +294,16 @@ namespace huffman {
 
 
     // expend encoded input stream into output
-    void expand(std::istream& is, std::ostream& os) {
+    [[maybe_unused]]
+    static void expand(std::istream& is, std::ostream& os) {
         BitStreamIn bsi(is);
         BitStreamOut bso(os);
         internal::expand(bsi, bso);
     }
 
     // decompress encoded input string
-    std::string expand(const std::string &inputCompressed) {
+    [[maybe_unused]]
+    static std::string expand(const std::string &inputCompressed) {
         std::istringstream issComp = std::istringstream(inputCompressed, std::ios::binary);
         BitStreamIn bsiComp(issComp);
 
@@ -302,7 +317,8 @@ namespace huffman {
     }
 
     // compress string_view into output string
-    std::string compress(const std::string &input) {
+    [[maybe_unused]]
+    static std::string compress(const std::string &input) {
         std::istringstream iss(input, std::ios::binary);
         const auto trieRoot = buildTrie(iss);
 
@@ -317,7 +333,8 @@ namespace huffman {
     }
 
     // compress the input, given as two independent streams to the same data, into output
-    void compress(std::istream &input1, std::istream &input2, std::ostream& output) {
+    [[maybe_unused]]
+    static void compress(std::istream &input1, std::istream &input2, std::ostream& output) {
         BitStreamOut bso(output);
         internal::compress(input1, input2, bso);
     }

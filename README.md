@@ -1,17 +1,20 @@
 # Compression algorithms in C++
 
 ## `src/`
-- `compress` executable that can compress and extract arbitrary files with Huffman or LZW compression:
-   - ```bash
+- `compress` executable that can compress and extract arbitrary files with various compression methods (default: Huffman):
+   - ```
       $ build/compress -h
       Usage: build/compress [options] INPUT_FILENAME
       -h, --help
-      Show this help message
+        Show this help message
       -l, --lzw
-      Use LZW compression instead of Huffman
+        Use LZW compression instead of Huffman
+      -b, --bwmh
+        Use Burrows-Wheeler, move-to-front, and then Huffman compression
+        instead of only Huffman
       -x, --extract
-      Extract input file instead of compressing it
-      
+        Extract input file instead of compressing it
+
       Examples:
       build/compress input.txt		Compress input.txt with Huffman
       build/compress -l input.txt		Compress input.txt with LZW
@@ -24,6 +27,8 @@
 - `BitStreamIn` as a wrapper to easily read a bit stream from `std::istream`
 - `BitStreamOut` as a wrapper to easily write a bit stream to `std::ostream`
 - `ShortBitSet` as a simple bit set with up to 32 bits (stored in a `uint32_t`) and some convenience functions
+- `bw::encode` and `bw::decode` for applying the [Burrows-Wheeler transform](https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform) (Note: not the most efficient implementation due to circular suffix array sorting)
+- `mtf::encode` and `mtf::decode` for applying the [Move-to-front transform](https://en.wikipedia.org/wiki/Move-to-front_transform)
 
 ## Compilation and execution
 - Download submodules (for unit tests): `git submodule update --init --recursive`
